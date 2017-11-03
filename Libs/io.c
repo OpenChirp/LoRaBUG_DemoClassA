@@ -134,6 +134,8 @@ void setupuart()
 
 void uartwrite(const char *str, size_t size)
 {
+    if (!uartHandle) return;
+
     IArg key = GateMutexPri_enter(GateMutexPri_handle(&uartMutexStruct));
     if (UART_write(uartHandle, str, size) == UART_ERROR)
     {
@@ -151,6 +153,8 @@ void uartwrite(const char *str, size_t size)
  */
 void uartputs(const char *str)
 {
+    if (!uartHandle) return;
+
     IArg key = GateMutexPri_enter(GateMutexPri_handle(&uartMutexStruct));
     if (strlen(str) && UART_write(uartHandle, str, strlen(str)) == UART_ERROR)
     {
@@ -165,6 +169,8 @@ void uartputs(const char *str)
 
 void uartprintf(const char *format, ...)
 {
+    if (!uartHandle) return;
+
     IArg key = GateMutexPri_enter(GateMutexPri_handle(&uartMutexStruct));
     va_list args;
     va_start (args, format);
@@ -183,6 +189,7 @@ void uartprintf(const char *format, ...)
  * @return The null terminated line of at most \a UART_RECV_LINE_LENGTH string length.
  */
 char *uartreadline() {
+
 	size_t index;
 	for (index = 0; index < (sizeof(uartlinebuf) - 1); index++) {
 		int count = UART_read(uartHandle, uartlinebuf + index, 1);
